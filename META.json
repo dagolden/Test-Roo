@@ -39,12 +39,17 @@
          }
       },
       "runtime" : {
+         "recommends" : {
+            "bareword::filehandles" : "0",
+            "indirect" : "0",
+            "multidimensional" : "0"
+         },
          "requires" : {
             "Moo" : "1.000008",
             "Test::More" : "0.96",
             "perl" : "5.008001",
             "strict" : "0",
-            "warnings" : "0"
+            "strictures" : "0"
          }
       },
       "test" : {
@@ -54,7 +59,8 @@
             "File::Find" : "0",
             "File::Spec::Functions" : "0",
             "File::Temp" : "0",
-            "List::Util" : "0"
+            "List::Util" : "0",
+            "warnings" : "0"
          }
       }
    },
