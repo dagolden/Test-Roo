@@ -7,22 +7,17 @@ package Test::Roo::Role;
 # VERSION
 
 use Test::Roo (); # no imports!
-use Test::More 0.96 import => [qw/subtest/];
-
-our @EXPORT = qw/test/;
 
 sub import {
     my ($class, @args) = @_;
     my $caller = caller;
-    for my $x (@EXPORT) {
+    {
         no strict 'refs';
-        *{$caller . "::$x"} = *{$x};
+        *{$caller . "::test"} = *Test::Roo::test;
     }
     eval qq{ package $caller; use Test::More; use Moo::Role };
     die $@ if $@;
 }
-
-*test = *Test::Roo::test;
 
 1;
 
