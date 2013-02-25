@@ -66,7 +66,7 @@ compose the Awesome::Module::Test::Role behavior for its own tests.
 No more copying and pasting tests from a super class!  Superclasses define and
 share their tests.  Subclasses provide their own fixtures and run the tests.
 
-=for Pod::Coverage setup teardown do_it
+=for Pod::Coverage add_methods_here
 
 =head1 USAGE
 
@@ -200,7 +200,7 @@ calls the teardown method (triggering modifiers).  It is called by the
 C<run_tests> function, or you can call it yourself after composing
 roles with C<with>.
 
-=head2 setup, teardown, do_it
+=head2 setup, teardown, my_tests
 
 These are used to anchor method modifiers in the testing class and
 should not be otherwise modified or called directly.

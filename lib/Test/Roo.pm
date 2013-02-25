@@ -7,7 +7,7 @@ package Test::Roo;
 
 use Test::More 0.96 import => [qw/subtest done_testing/];
 
-our @EXPORT = qw/setup do_it teardown run_me test run_tests/;
+our @EXPORT = qw/setup teardown my_tests run_me test run_tests/;
 
 sub import {
     my ( $class, @args ) = @_;
@@ -32,7 +32,7 @@ sub test {
         my $self = shift;
         subtest $name => sub { $code->($self) };
     };
-    eval qq{ package $caller; after do_it => \$subtest };
+    eval qq{ package $caller; after my_tests => \$subtest };
     die $@ if $@;
 }
 
@@ -56,7 +56,7 @@ sub run_tests {
 sub run_me {
     my ($self) = @_;
     $self->setup;
-    $self->do_it;
+    $self->my_tests;
     $self->teardown;
 }
 
@@ -68,12 +68,11 @@ sub setup { }
 
 sub teardown { }
 
-sub do_it { }
+sub my_tests { }
 
 1;
 
-=for Pod::Coverage
-setup teardown do_it
+=for Pod::Coverage add_methods_here
 
 =head1 SYNOPSIS
 
@@ -265,7 +264,7 @@ calls the teardown method (triggering modifiers).  It is called by the
 C<run_tests> function, or you can call it yourself after composing
 roles with C<with>.
 
-=head2 setup, teardown, do_it
+=head2 setup, teardown, my_tests
 
 These are used to anchor method modifiers in the testing class and
 should not be otherwise modified or called directly.
