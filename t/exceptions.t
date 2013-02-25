@@ -20,13 +20,32 @@ my @cases = (
         file => "t/bin/not-strict.pl",
         expect => qr/requires explicit package name/,
     },
+    {
+        label => "skip_all respected",
+        file => "t/bin/skip-all.pl",
+        expect => qr/We just want to skip/,
+        exit_ok => 1,
+        stdout => 1,
+    },
+    {
+        label => "skip_all respected in role",
+        file => "t/bin/skip-in-role.pl",
+        expect => qr/We just want to skip/,
+        exit_ok => 1,
+        stdout => 1,
+    },
 );
 
 for my $c (@cases) {
     my ($output, $error, $rc) = capture {  system($^X, $c->{file}) };
     subtest $c->{label} => sub {
-        ok( $rc, "non-zero exit" );
-        like( $error, $c->{expect}, "exception text" );
+        if ( $c->{exit_ok} ) {
+            ok( !$rc, "exit ok" );
+        }
+        else {
+            ok( $rc, "nonzero exit"  );
+        }
+        like( $c->{stdout} ? $output : $error, $c->{expect}, "exception text" );
     };
 }
 

@@ -132,6 +132,9 @@ used.  The C<done_testing> function will be called for you automatically.
 
 See also L<Test::Roo::Role> for test role usage.
 
+If you have to call C<plan skip_all>, do it in the main body of your code, not
+in a test or modifier.
+
 =head2 Creating fixtures
 
 You can create fixtures with normal Moo syntax.  You can even make them lazy

@@ -50,6 +50,9 @@ This module defines test behaviors as a L<Moo::Role>.
 Importing L<Test::Roo::Role> also loads L<Moo::Role> (which gives you L<strictures> with
 fatal warnings and other goodies) and L<Test::More>.
 
+If you have to call C<plan skip_all>, do it in the main body of your code, not
+in a test or modifier.
+
 =head2 Creating and requiring fixtures
 
 You can create fixtures with normal Moo syntax.  You can even make them lazy
