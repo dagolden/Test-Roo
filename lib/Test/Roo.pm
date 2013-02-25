@@ -159,6 +159,9 @@ and these will be run before and after all tests (respectively).
 Roles may also modify these, so the order that modifiers will be called
 will depend on when roles are composed.
 
+You can even call test functions in these, for example, to confirm
+that something has been set up or cleaned up.
+
 =head2 Imported functions
 
 =head3 test
