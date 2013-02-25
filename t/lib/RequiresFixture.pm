@@ -1,6 +1,4 @@
 use 5.008001;
-use strict;
-use warnings;
 package RequiresFixture;
 use Test::Roo::Role;
 

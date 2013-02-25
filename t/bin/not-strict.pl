@@ -1,15 +1,10 @@
 use 5.008001;
 use Test::Roo;
 
-use lib 't/lib';
+$foo = "1.23";
 
-with 'LastTest';
-
-test in_main => sub {
-    pass( "main" );
-};
+test 'just pass' => sub { ok(1) };
 
 run_tests;
-
 # COPYRIGHT
 # vim: ts=4 sts=4 sw=4 et:

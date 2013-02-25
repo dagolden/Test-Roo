@@ -1,6 +1,5 @@
 use 5.008001;
-use strict;
-use warnings;
+use strictures;
 
 package Test::Roo::Role;
 # ABSTRACT: Composable role for Test::Roo
@@ -15,6 +14,7 @@ sub import {
         no strict 'refs';
         *{ $caller . "::test" } = *Test::Roo::test;
     }
+    strictures->import; # do this for Moo, since we load Moo in eval
     eval qq{ package $caller; use Test::More; use Moo::Role };
     die $@ if $@;
 }

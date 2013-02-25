@@ -1,6 +1,4 @@
 use 5.008001;
-use strict;
-use warnings;
 use Test::Roo; # should import Moo as well
 
 use lib 't/lib';

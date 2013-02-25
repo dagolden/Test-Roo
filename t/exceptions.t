@@ -1,6 +1,4 @@
 use 5.008001;
-use strict;
-use warnings;
 use Test::More 0.96;
 use Capture::Tiny qw/capture/;
 
@@ -16,6 +14,11 @@ my @cases = (
         label => "requires not satisfied",
         file => "t/bin/unsatisfied.pl",
         expect => qr/Can't apply RequiresFixture to main/,
+    },
+    {
+        label => "Test::Roo loads strictures",
+        file => "t/bin/not-strict.pl",
+        expect => qr/requires explicit package name/,
     },
 );
 
