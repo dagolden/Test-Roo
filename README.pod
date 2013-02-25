@@ -176,8 +176,8 @@ depend on when they are composed relative to other test declarations.
     run_tests( @optional_roles  );
 
 The C<run_tests> function composes an optional list of roles into the calling
-package, creates an object without arguments, calls the C<run_me> method, and
-calls C<done_testing>.
+package, creates an object without arguments, calls the C<run_me> method on it,
+and calls C<done_testing>.
 
 Because this is usually at the end of the test file, all attributes,
 tests and method modifiers in the main test file will be set up before
