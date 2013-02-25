@@ -67,11 +67,11 @@
    "provides" : {
       "Test::Roo" : {
          "file" : "lib/Test/Roo.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Test::Roo::Role" : {
          "file" : "lib/Test/Roo/Role.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -86,6 +86,6 @@
          "web" : "https://github.com/dagolden/test-roo"
       }
    },
-   "version" : "0.001"
+   "version" : "0.002"
 }
 
