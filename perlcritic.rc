@@ -19,5 +19,5 @@ allow = refs
 [-Modules::ProhibitEvilModules]
 
 # Turn this on
-[Lax::ProhibitStringyEval::ExceptForRequire]
+[-Lax::ProhibitStringyEval::ExceptForRequire]
 
