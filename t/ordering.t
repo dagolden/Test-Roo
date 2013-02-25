@@ -2,7 +2,6 @@ use 5.008001;
 use strict;
 use warnings;
 use Test::More 0.96;
-use Test::Fatal;
 use Capture::Tiny qw/capture/;
 
 use lib 't/lib';
