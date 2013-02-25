@@ -21,3 +21,9 @@ allow = refs
 # Turn this on
 [-Lax::ProhibitStringyEval::ExceptForRequire]
 
+# Customize
+[Lax::RequireExplicitPackage::ExceptForPragmata]
+allowed_pragmata = diagnostics feature perlversion strict warnings strictures
+
+[TestingAndDebugging::RequireUseStrict]
+equivalent_modules = strictures
