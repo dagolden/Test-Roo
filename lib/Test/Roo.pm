@@ -7,7 +7,7 @@ package Test::Roo;
 
 use Test::More 0.96 import => [qw/subtest done_testing/];
 
-our @EXPORT = qw/setup do_it teardown test run_tests/;
+our @EXPORT = qw/setup do_it teardown do_tests test run_tests/;
 
 sub import {
     my ( $class, @args ) = @_;
@@ -45,10 +45,19 @@ sub run_tests {
         die $@ if $@;
     }
     my $obj = $caller->new;
-    $obj->setup;
-    $obj->do_it;
-    $obj->teardown;
+    $obj->do_tests;
     done_testing;
+}
+
+#--------------------------------------------------------------------------#
+# methods
+#--------------------------------------------------------------------------#
+
+sub do_tests {
+    my ($self) = @_;
+    $self->setup;
+    $self->do_it;
+    $self->teardown;
 }
 
 #--------------------------------------------------------------------------#
