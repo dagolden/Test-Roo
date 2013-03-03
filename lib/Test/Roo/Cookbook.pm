@@ -1,6 +1,5 @@
 use 5.008001;
-use strict;
-use warnings;
+use strictures;
 
 package Test::Roo::Cookbook;
 # ABSTRACT: Test::Roo examples
@@ -26,7 +25,7 @@ This file offers usage ideas and examples for L<Test::Roo>.
 
 ...
 
-=head1 PARAMETERIZING TESTS
+=head1 PARAMETERIZED TESTS
 
 ...
 

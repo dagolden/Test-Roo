@@ -162,8 +162,8 @@ main test class.
 
 =head2 Setup and teardown
 
-You can add method modifiers around the C<setup> and C<teardown> methods
-and these will be run before and after all tests (respectively).
+You can add method modifiers around the C<setup> and C<teardown> methods and
+these will be run before tests begin and after tests finish (respectively).
 
     before  setup     => sub { ... };
 
@@ -237,7 +237,10 @@ in a separate C<.pm> file) and create and run the test objects yourself:
 Note that, in this case, you will need to compose your own roles with C<with>
 and call C<done_testing> yourself.
 
-=head1 FUNCTIONS
+=head1 EXPORTED FUNCTIONS
+
+Loading L<Test::Roo> exports subroutines into the calling package to declare
+and run tests.
 
 =head2 test
 
@@ -266,8 +269,8 @@ Because it calls C<done_testing>, it may only be called once for a given test cl
 
 =head1 IMPORTED METHODS
 
-Loading L<Test::Roo> imports several subroutines into the calling
-package to create required default methods.
+Loading L<Test::Roo> also exports several subroutines into the calling
+package to create required default methods in the test class.
 
 =head2 run_me
 
@@ -278,7 +281,7 @@ calls the teardown method (triggering modifiers).  It is called by the
 C<run_tests> function, or you can call it yourself after composing
 roles with C<with>.
 
-=head2 setup, teardown, my_tests
+=head2 setup, teardown, my_tests, each_test
 
 These are used to anchor method modifiers in the testing class and
 should not be otherwise modified or called directly.

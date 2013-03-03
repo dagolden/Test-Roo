@@ -71,22 +71,37 @@ See L<Moo::Role> and L<Role::Tiny> for everything you can do with roles.
 
 =head2 Setup and teardown
 
-You can add method modifiers around the C<setup> and C<teardown> methods
-and these will be run before and after all tests (respectively).
+You can add method modifiers around the C<setup> and C<teardown> methods and
+these will be run before tests begin and after tests finish (respectively).
 
     before  setup     => sub { ... };
 
     after   teardown  => sub { ... };
 
-The order that modifiers will be called will depend on the timing of role
-composition.
+You can also add method modifiers around C<each_test>, which will be
+run before and after B<every> individual test.  You could use these to
+prepare or reset a fixture.
 
-You can even call test functions in these, for example, to confirm
-that something has been set up or cleaned up.
+    has fixture => ( is => 'lazy, clearer => 1, predicate => 1 );
 
-=head2 Imported functions
+    after  each_test => sub { shift->clear_fixture };
 
-=head3 test
+Roles may also modify C<setup>, C<teardown>, and C<each_test>, so the order
+that modifiers will be called will depend on when roles are composed.  Be
+careful with C<each_test>, though, because the global effect may make
+composition more fragile.
+
+You can call test functions in modifiers. For example, you could
+confirm that something has been set up or cleaned up.
+
+    before each_test => sub { ok( ! shift->has_fixture ) };
+
+=head1 EXPORTED FUNCTIONS
+
+Loading L<Test::Roo::Role> exports a single subroutine into the calling package
+to declare tests.
+
+=head2 test
 
     test $label => sub { ... };
 
