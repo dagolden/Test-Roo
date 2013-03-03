@@ -2,6 +2,10 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+    [ADDED]
+
+    - Added 'each_test' hook for global actions before/after every test
+
 0.002     2013-02-25 14:25:09 America/New_York
 
     [ADDED]

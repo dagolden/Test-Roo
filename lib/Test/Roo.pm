@@ -7,7 +7,7 @@ package Test::Roo;
 
 use Test::More 0.96 import => [qw/subtest done_testing/];
 
-our @EXPORT = qw/setup teardown my_tests run_me test run_tests/;
+our @EXPORT = qw/setup each_test teardown my_tests run_me test run_tests/;
 
 sub import {
     my ( $class, @args ) = @_;
@@ -28,10 +28,7 @@ sub import {
 sub test {
     my ( $name, $code ) = @_;
     my $caller  = caller;
-    my $subtest = sub {
-        my $self = shift;
-        subtest $name => sub { $code->($self) };
-    };
+    my $subtest = sub { shift->each_test( $name, $code ) };
     eval qq{ package $caller; after my_tests => \$subtest };
     die $@ if $@;
 }
@@ -52,6 +49,11 @@ sub run_tests {
 #--------------------------------------------------------------------------#
 # methods
 #--------------------------------------------------------------------------#
+
+sub each_test {
+    my ($self, $name, $code) = @_;
+    subtest $name => sub { $code->($self) };
+}
 
 sub run_me {
     my ($self) = @_;
@@ -167,11 +169,23 @@ and these will be run before and after all tests (respectively).
 
     after   teardown  => sub { ... };
 
-Roles may also modify these, so the order that modifiers will be called
-will depend on when roles are composed.
+You can also add method modifiers around C<each_test>, which will be
+run before and after B<every> individual test.  You could use these to
+prepare or reset a fixture.
 
-You can even call test functions in these, for example, to confirm
-that something has been set up or cleaned up.
+    has fixture => ( is => 'lazy, clearer => 1, predicate => 1 );
+
+    after  each_test => sub { shift->clear_fixture };
+
+Roles may also modify C<setup>, C<teardown>, and C<each_test>, so the order
+that modifiers will be called will depend on when roles are composed.  Be
+careful with C<each_test>, though, because the global effect may make
+composition more fragile.
+
+You can call test functions in modifiers. For example, you could
+confirm that something has been set up or cleaned up.
+
+    before each_test => sub { ok( ! shift->has_fixture ) };
 
 =head2 Running tests
 
