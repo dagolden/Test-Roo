@@ -26,8 +26,7 @@ my @phrases = ( 'hello world', 'goodbye world', );
 
 for my $p (@phrases) {
     subtest $p => sub {
-        my $obj = new_ok( 'MyTest', [ phrase => $p ] );
-        $obj->run_me;
+        MyTest->run_once( phrase => $p );
     };
 }
 

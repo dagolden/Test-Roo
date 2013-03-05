@@ -5,9 +5,9 @@ package Test::Roo;
 # ABSTRACT: Composable tests with roles and Moo
 # VERSION
 
-use Test::More 0.96 import => [qw/subtest done_testing/];
+use Test::More 0.96 import => [qw/done_testing/];
 
-our @EXPORT = qw/setup each_test teardown my_tests run_me test run_tests/;
+our @EXPORT = qw/test run_tests/;
 
 sub import {
     my ( $class, @args ) = @_;
@@ -17,7 +17,7 @@ sub import {
         *{ $caller . "::$x" } = *{$x};
     }
     strictures->import; # do this for Moo, since we load Moo in eval
-    eval qq{ package $caller; use Test::More; use Moo };
+    eval qq{ package $caller; use Test::More; use Moo; extends 'Test::Roo::Class' };
     die $@ if $@;
 }
 
@@ -29,11 +29,11 @@ sub test {
     my ( $name, $code ) = @_;
     my $caller  = caller;
     my $subtest = sub { shift->each_test( $name, $code ) };
-    eval qq{ package $caller; after my_tests => \$subtest };
+    eval qq{ package $caller; after _do_tests => \$subtest };
     die $@ if $@;
 }
 
-# XXX take args for new?
+# XXX get rid of composition and take args for new instead?
 sub run_tests {
     my @roles  = @_;
     my $caller = caller;
@@ -41,36 +41,9 @@ sub run_tests {
         eval qq{ package $caller; with '$role' };
         die $@ if $@;
     }
-    my $obj = $caller->new;
-    $obj->run_me;
+    $caller->run_once;
     done_testing;
 }
-
-#--------------------------------------------------------------------------#
-# methods
-#--------------------------------------------------------------------------#
-
-sub each_test {
-    my ($self, $name, $code) = @_;
-    subtest $name => sub { $code->($self) };
-}
-
-sub run_me {
-    my ($self) = @_;
-    $self->setup;
-    $self->my_tests;
-    $self->teardown;
-}
-
-#--------------------------------------------------------------------------#
-# stub methods that get modified
-#--------------------------------------------------------------------------#
-
-sub setup { }
-
-sub teardown { }
-
-sub my_tests { }
 
 1;
 
