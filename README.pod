@@ -6,7 +6,7 @@ Test::Roo - Composable tests with roles and Moo
 
 =head1 VERSION
 
-version 0.003
+version 1.000
 
 =head1 SYNOPSIS
 

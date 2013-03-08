@@ -69,19 +69,19 @@
    "provides" : {
       "Test::Roo" : {
          "file" : "lib/Test/Roo.pm",
-         "version" : "0.003"
+         "version" : "1.000"
       },
       "Test::Roo::Class" : {
          "file" : "lib/Test/Roo/Class.pm",
-         "version" : "0.003"
+         "version" : "1.000"
       },
       "Test::Roo::Cookbook" : {
          "file" : "lib/Test/Roo/Cookbook.pm",
-         "version" : "0.003"
+         "version" : "1.000"
       },
       "Test::Roo::Role" : {
          "file" : "lib/Test/Roo/Role.pm",
-         "version" : "0.003"
+         "version" : "1.000"
       }
    },
    "release_status" : "stable",
@@ -96,6 +96,6 @@
          "web" : "https://github.com/dagolden/test-roo"
       }
    },
-   "version" : "0.003"
+   "version" : "1.000"
 }
 
