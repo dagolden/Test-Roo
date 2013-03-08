@@ -13,7 +13,9 @@ package Test::Roo::Cookbook;
 
 This file offers usage ideas and examples for L<Test::Roo>.
 
-=head1 SELF-CONTAINED TEST FILE
+=head1 ORGANIZING TEST CLASSES AND ROLES
+
+=head2 Self-contained test file
 
 A single test file could be used for simple tests where you want to
 use Moo attributes for fixtures that get used by test blocks.
@@ -62,17 +64,194 @@ available to all test blocks:
 
     done_testing;
 
-=head1 STANDALONE TEST CLASS
+=head2 Standalone test class
 
-...
+You don't have to put the test class into the F<.t> file.  It's just a class.
 
-=head1 STANDALONE TEST ROLES
+Here is the same corpus checking example as before, but now as a class:
 
-...
+    # examples/cookbook/lib/CorpusCheck.pm
+    package CorpusCheck;
+    use Test::Roo;
 
-=head1 PARAMETERIZED TESTS
+    use MooX::Types::MooseLike::Base qw/ArrayRef/;
+    use Path::Tiny;
 
-...
+    has corpus => (
+        is       => 'ro',
+        isa      => sub { -f shift },
+        required => 1,
+    );
+
+    has lines => (
+        is  => 'lazy',
+        isa => ArrayRef,
+    );
+
+    sub _build_lines {
+        my ($self) = @_;
+        return [ map { lc } path( $self->corpus )->lines ];
+    }
+
+    test 'sorted' => sub {
+        my $self = shift;
+        is_deeply( $self->lines, [ sort @{$self->lines} ], "alphabetized");
+    };
+
+    test 'a to z' => sub {
+        my $self = shift;
+        my %letters = map { substr($_,0,1) => 1 } @{ $self->lines };
+        is_deeply( [sort keys %letters], ["a" .. "z"], "all letters found" );
+    };
+
+    1;
+
+Running it from a F<.t> file doesn't even need L<Test::Roo>:
+
+    # examples/cookbook/standalone.t
+
+    use strictures;
+    use Test::More;
+
+    use lib 'lib';
+    use CorpusCheck;
+
+    CorpusCheck->run_tests({ corpus => "/usr/share/dict/words" });
+
+    done_testing;
+
+=head2 Standalone Test Roles
+
+The real power of L<Test::Roo> is decomposing test behaviors into
+roles that can be reused.
+
+Imagine we want to test a file-finder module like L<Path::Iterator::Rule>.
+We could put tests for it into a role, then run the tests from a file that composes
+that role.  For example, here would be the test file:
+
+    # examples/cookbook/test-pir.pl
+
+    use Test::Roo;
+
+    use lib 'lib';
+
+    with 'IteratorTest';
+
+    run_me(
+        {
+            iterator_class => 'Path::Iterator::Rule',
+            result_type    => '',
+        }
+    );
+
+    done_testing;
+
+Then in the distribution for L<Path::Class::Rule>, the same role
+could be tested with a test file like this:
+
+    # examples/cookbook/test-pcr.pl
+    
+    use Test::Roo;
+
+    use lib 'lib';
+
+    with 'IteratorTest';
+
+    run_me(
+        {
+            iterator_class => 'Path::Class::Rule',
+            result_type    => 'Path::Class::Entity',
+        },
+    );
+
+    done_testing;
+
+What is the common role that they are consuming?  It sets up a test
+directory, creates files and runs tests:
+
+    # examples/cookbook/lib/IteratorTest.pm
+
+    package IteratorTest;
+    use Test::Roo::Role;
+
+    use MooX::Types::MooseLike::Base qw/:all/;
+    use Class::Load qw/load_class/;
+    use Path::Tiny;
+
+    has [qw/iterator_class result_type/] => (
+        is       => 'ro',
+        isa      => Str,
+        required => 1,
+    );
+
+    has test_files => (
+        is      => 'ro',
+        isa     => ArrayRef,
+        default => sub {
+            return [
+                qw(
+                aaaa
+                bbbb
+                cccc/dddd
+                eeee/ffff/gggg
+                )
+            ];
+        },
+    );
+
+    has tempdir => (
+        is  => 'lazy',
+        isa => InstanceOf ['Path::Tiny']
+    );
+
+    has rule_object => (
+        is      => 'lazy',
+        isa     => Object,
+        clearer => 1,
+    );
+
+    sub _build_description { return shift->iterator_class }
+
+    sub _build_tempdir {
+        my ($self) = @_;
+        my $dir = Path::Tiny->tempdir;
+        $dir->child($_)->touchpath for @{ $self->test_files };
+        return $dir;
+    }
+
+    sub _build_rule_object {
+        my ($self) = @_;
+        load_class( $self->iterator_class );
+        return $self->iterator_class->new;
+    }
+
+    sub test_result_type {
+        my ( $self, $file ) = @_;
+        if ( my $type = $self->result_type ) {
+            isa_ok( $file, $type, $file );
+        }
+        else {
+            is( ref($file), '', "$file is string" );
+        }
+    }
+
+    test 'find files' => sub {
+        my $self = shift;
+        $self->clear_rule_object; # make sure have a new one each time
+
+        $self->tempdir;
+        my $rule = $self->rule_object;
+        my @files = $rule->file->all( $self->tempdir, { relative => 1 } );
+
+        is_deeply( \@files, $self->test_files, "correct list of files" )
+        or diag explain \@files;
+
+        $self->test_result_type($_) for @files;
+    };
+
+    # ... more tests ...
+
+    1;
 
 =head1 MANAGING FIXTURES
 
