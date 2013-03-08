@@ -18,12 +18,12 @@ sub import {
         package $caller;
         use Moo::Role;
     };
-    if ( @args ) {
+    if (@args) {
         eval qq{ package $caller; use Test::More \@args };
     }
     else {
         eval qq{ package $caller; use Test::More };
-    };
+    }
     die $@ if $@;
 }
 

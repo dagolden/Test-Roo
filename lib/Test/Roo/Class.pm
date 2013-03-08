@@ -76,7 +76,7 @@ sub run_tests {
     $desc = shift;
 
     # create an object if needed and possibly update description
-    $self = $self->new($args || {})
+    $self = $self->new( $args || {} )
       if !ref $self;
     $self->description($desc)
       if defined $desc;
