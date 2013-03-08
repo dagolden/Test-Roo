@@ -16,7 +16,7 @@ use strictures;
 use Test::More;
 
 for my $c ( qw/Digest::MD5 Math::BigInt/ ) {
-    MyTest->run_once( class => $c );
+    MyTest->run_tests( $c, { class => $c } );
 }
 
 done_testing;

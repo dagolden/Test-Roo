@@ -46,6 +46,7 @@
          },
          "requires" : {
             "Moo" : "1.000008",
+            "MooX::Types::MooseLike::Base" : "0",
             "Test::More" : "0.96",
             "perl" : "5.008001",
             "strict" : "0",
@@ -67,6 +68,10 @@
    "provides" : {
       "Test::Roo" : {
          "file" : "lib/Test/Roo.pm",
+         "version" : "0.003"
+      },
+      "Test::Roo::Class" : {
+         "file" : "lib/Test/Roo/Class.pm",
          "version" : "0.003"
       },
       "Test::Roo::Cookbook" : {

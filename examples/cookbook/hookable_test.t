@@ -11,4 +11,5 @@ before is_positive => sub { shift->counter( 1 ) };
 
 test 'hookable' => sub { shift->is_positive };
 
-run_tests;
+run_me;
+done_testing;

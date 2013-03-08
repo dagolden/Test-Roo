@@ -11,6 +11,7 @@ test try_me => sub {
     like( $self->fixture, qr/hello world/, "saw fixture" );
 };
 
-run_tests;
+run_me;
+done_testing;
 # COPYRIGHT
 # vim: ts=4 sts=4 sw=4 et:

@@ -13,6 +13,10 @@ has regex => (
     default => sub { qr/world/i },
 );
 
+sub _build_description {
+    return shift->phrase
+}
+
 test try_me => sub {
     my $self = shift;
     like( $self->phrase, $self->regex, "phrase matched regex" );
@@ -25,9 +29,7 @@ use Test::More;
 my @phrases = ( 'hello world', 'goodbye world', );
 
 for my $p (@phrases) {
-    subtest $p => sub {
-        MyTest->run_once( phrase => $p );
-    };
+    MyTest->run_tests({phrase => $p});
 }
 
 done_testing;

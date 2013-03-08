@@ -4,4 +4,7 @@ use lib 't/lib/';
 
 test 'just fail' => sub { ok(0) };
 
-run_tests(qw/Skipper/);
+with 'Skipper';
+
+run_me;
+done_testing;

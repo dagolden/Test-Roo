@@ -20,4 +20,5 @@ test 'is two' => sub { is( shift->counter, 2, "counter is 2" ) };
 
 test 'still two' => sub { is( shift->counter, 2, "counter is still two" ) };
 
-run_tests;
+run_me;
+done_testing;

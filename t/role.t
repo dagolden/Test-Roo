@@ -8,6 +8,8 @@ has fixture => (
     default => sub { "hello world" },
 );
 
-run_tests( qw/RequiresFixture/ );
+with qw/RequiresFixture/;
+run_me;
+done_testing;
 # COPYRIGHT
 # vim: ts=4 sts=4 sw=4 et:

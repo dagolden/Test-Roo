@@ -7,4 +7,6 @@ has class => (
     default => sub { "Digest::MD5" },
 );
 
-run_tests(qw/MyTestRole/);
+with qw/MyTestRole/;
+run_me;
+done_testing;

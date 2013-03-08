@@ -18,4 +18,5 @@ after teardown => sub {
 
 test 'stub test' => sub { ok(1) };
 
-run_tests;
+run_me;
+done_testing;

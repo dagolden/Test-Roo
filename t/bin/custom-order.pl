@@ -9,7 +9,8 @@ test in_main => sub {
     pass( "main" );
 };
 
-run_tests;
+run_me;
+done_testing;
 
 # COPYRIGHT
 # vim: ts=4 sts=4 sw=4 et:

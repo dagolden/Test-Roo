@@ -15,7 +15,16 @@ sub import {
         *{ $caller . "::test" } = *Test::Roo::test;
     }
     strictures->import; # do this for Moo, since we load Moo in eval
-    eval qq{ package $caller; use Test::More; use Moo::Role };
+    eval qq{
+        package $caller;
+        use Moo::Role;
+    };
+    if ( @args ) {
+        eval qq{ package $caller; use Test::More \@args };
+    }
+    else {
+        eval qq{ package $caller; use Test::More };
+    };
     die $@ if $@;
 }
 
@@ -47,11 +56,11 @@ This module defines test behaviors as a L<Moo::Role>.
 
 =head1 USAGE
 
-Importing L<Test::Roo::Role> also loads L<Moo::Role> (which gives you L<strictures> with
-fatal warnings and other goodies) and L<Test::More>.
+Importing L<Test::Roo::Role> also loads L<Moo::Role> (which gives you
+L<strictures> with fatal warnings and other goodies).
 
-If you have to call C<plan skip_all>, do it in the main body of your code, not
-in a test or modifier.
+Importing also loads L<Test::More>.  Any import arguments are passed through to
+Test::More's C<import> method.
 
 =head2 Creating and requiring fixtures
 
