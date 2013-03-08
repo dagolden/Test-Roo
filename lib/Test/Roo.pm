@@ -259,6 +259,20 @@ The C<run_me> function calls the C<run_tests> method on the current package
 and passes all arguments to that method.  It takes a description and/or
 a hash reference of constructor arguments.
 
+=head1 DIFFERENCES FROM TEST::ROUTINE
+
+While this module was inspired by L<Test::Routine>, it is not a drop-in
+replacement.  Here is an overview of major differences:
+
+=for :list
+* L<Test::Roo> uses L<Moo>; L<Test::Routine> uses L<Moose>
+* Loading L<Test::Roo> makes the importing package a class; in L<Test::Routine> it becomes a role
+* Loading L<Test::Roo> loads L<Test::More>; L<Test::Routine> does not
+* In L<Test::Roo>, C<run_test> is a method; in L<Test::Routine> it is a function and takes arguments in a different order
+* In L<Test::Roo>, all role composition must be explicit using C<with>; in L<Test::Routine>, the C<run_tests> command can also compose roles
+* In L<Test::Roo>, test blocks become method modifiers hooked on an empty method; in L<Test::Routine>, they become methods run via introspection
+* In L<Test::Roo>, setup and teardown are done by modifying C<setup> and C<teardown> methods; in L<Test::Routine> they are done by modifying C<run_test>
+
 =cut
 
 # vim: ts=4 sts=4 sw=4 et:
