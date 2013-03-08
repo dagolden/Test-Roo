@@ -71,6 +71,7 @@ You don't have to put the test class into the F<.t> file.  It's just a class.
 Here is the same corpus checking example as before, but now as a class:
 
     # examples/cookbook/lib/CorpusCheck.pm
+
     package CorpusCheck;
     use Test::Roo;
 
@@ -150,7 +151,7 @@ Then in the distribution for L<Path::Class::Rule>, the same role
 could be tested with a test file like this:
 
     # examples/cookbook/test-pcr.pl
-    
+
     use Test::Roo;
 
     use lib 'lib';
@@ -253,13 +254,138 @@ directory, creates files and runs tests:
 
     1;
 
-=head1 MANAGING FIXTURES
+=head1 CREATING AND MANAGING FIXTURES
 
-...
+=head2 Setting a test description
+
+You can override C<_build_description> to create a test description based
+on other attributes.  For example, the C<IteratorTest> package earlier
+had these lines:
+
+    has [qw/iterator_class result_type/] => (
+        is       => 'ro',
+        isa      => Str,
+        required => 1,
+    );
+
+    sub _build_description { return shift->iterator_class }
+
+The C<iterator_class> attribute is required and then the description
+is set to it.  Or, there could be a more verbose description:
+
+    sub _build_description {
+        my $name = shift->iterator_class;
+        return "Testing the $name class"
+    }
+
+=head2 Requiring a builder
+
+A test role can specify a lazy attribute and then require the
+consuming class to provide a builder for it.
+
+In the test role:
+
+    has fixture => (
+        is => 'lazy',
+    );
+
+    requires '_build_fixture';
+
+In the consuming class:
+
+    sub _build_fixture { ... }
+
+=head2 Clearing fixtures
+
+If a fixture has a clearer method, it can be easily reset during testing.
+This works really well with lazy attributes which get regenerated on demand.
+
+    has fixture => (
+        is => 'lazy',
+        clearer => 1,
+    );
+
+    test "some test" => sub {
+        my $self = shift;
+        $self->clear_fixture;
+        ...
+    };
 
 =head1 MODIFIERS FOR SETUP AND TEARDOWN
 
-...
+=head2 Setting up a fixture before testing
+
+When you need to do some extra work to set up a fixture, you can put a
+method modifier on the C<setup> method.  In some cases, this is more
+intuitive than doing all the work in an attribute builder.
+
+Here is an example that creates an SQLite table before any tests are
+run and cleans up afterwards:
+
+    # example/cookbook/sqlite.t
+
+    use Test::Roo;
+    use DBI;
+    use Path::Tiny;
+
+    has tempdir => (
+        is      => 'ro',
+        clearer => 1,
+        default => sub { Path::Tiny->tempdir },
+    );
+
+    has dbfile => (
+        is      => 'lazy',
+        default => sub { shift->tempdir->child('test.sqlite3') },
+    );
+
+    has dbh => ( is => 'lazy', );
+
+    sub _build_dbh {
+        my $self = shift;
+        DBI->connect(
+            "dbi:SQLite:dbname=" . $self->dbfile, { RaiseError => 1 }
+        );
+    }
+
+    before 'setup' => sub {
+        my $self = shift;
+        $self->dbh->do("CREATE TABLE f (f1, f2, f3)");
+    };
+
+    after 'teardown' => sub { shift->clear_tempdir };
+
+    test 'first' => sub {
+        my $self = shift;
+        my $dbh  = $self->dbh;
+        my $sth  = $dbh->prepare("INSERT INTO f(f1,f2,f3) VALUES (?,?,?)");
+        ok( $sth->execute( "one", "two", "three" ), "inserted data" );
+
+        my $got = $dbh->selectrow_arrayref("SELECT * FROM f");
+        is_deeply( $got, [qw/one two three/], "read data" );
+    };
+
+    run_me;
+    done_testing;
+
+=head2 Running tests during setup and teardown
+
+You can run any tests you like during setup or teardown.  The previous example
+could have written the setup and teardown hooks like this:
+
+    before 'setup' => sub {
+        my $self = shift;
+        ok( ! -f $self->dbfile, "test database file not created" );
+        ok( $self->dbh->do("CREATE TABLE f (f1, f2, f3)"), "created table");
+        ok( -f $self->dbfile, "test database file exists" );
+    };
+
+    after 'teardown' => sub {
+        my $self = shift;
+        my $dir = $self->tempdir;
+        $self->clear_tempdir;
+        ok( ! -f $dir, "tempdir cleaned up");
+    };
 
 =head1 MODIFIERS ON TESTS
 
@@ -269,10 +395,11 @@ Modifying C<each_test> triggers methods before or after B<every> test block
 defined with the C<test> function.  Because this affects all tests, whether
 from the test class or composed from roles, it needs to be used thoughtfully.
 
-Here is an example that ensures that all tests are run in their own separate
-temporary directory.
+Here is an example that ensures that every test block is run in its own
+separate temporary directory.
 
     # examples/cookbook/with_tempd.t
+
     use Test::Roo;
     use File::pushd qw/tempd/;
     use Cwd qw/getcwd/;
@@ -310,13 +437,14 @@ temporary directory.
     run_me;
     done_testing;
 
-=head2 Individual teat modifiers
+=head2 Individual test modifiers
 
 If you want to have method modifiers on an individual test, put your
 L<Test::More> tests in a method, add modifiers to that method, and use C<test>
 to invoke it.
 
     # examples/cookbook/hookable_test.t
+
     use Test::Roo;
 
     has counter => ( is => 'rw', default => sub { 0 } );
@@ -329,6 +457,54 @@ to invoke it.
     before is_positive => sub { shift->counter( 1 ) };
 
     test 'hookable' => sub { shift->is_positive };
+
+    run_me;
+    done_testing;
+
+=head2 Wrapping tests
+
+As a middle ground between global and individual modifiers, if you need to call
+some code repeatedly for some, but not all all tests, you can create a custom
+test function.  This might make sense for only a few tests, but could be
+helpful if there are many that need similar behavior, but you can't make it
+global by modifying C<each_test>.
+
+The following example clears the fixture before tests defined with the
+C<fresh_test> function.
+
+    # examples/cookbook/wrapped.t
+
+    use strict;
+    use Test::Roo;
+
+    has fixture => (
+        is => 'rw',
+        lazy => 1,
+        builder => 1,
+        clearer => 1,
+    );
+
+    sub _build_fixture { "Hello World" }
+
+    sub fresh_test {
+        my ($name, $code) = @_;
+        test $name, sub {
+            my $self = shift;
+            $self->clear_fixture;
+            $code->($self);
+        };
+    }
+
+    fresh_test 'first' => sub {
+        my $self = shift;
+        is ( $self->fixture, 'Hello World', "fixture has default" );
+        $self->fixture("Goodbye World");
+    };
+
+    fresh_test 'second' => sub {
+        my $self = shift;
+        is ( $self->fixture, 'Hello World', "fixture has default" );
+    };
 
     run_me;
     done_testing;
