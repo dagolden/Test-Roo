@@ -5,14 +5,13 @@ package Test::Roo;
 # ABSTRACT: Composable tests with roles and Moo
 # VERSION
 
-our @EXPORT = qw/test run_me/;
+use Sub::Install;
 
 sub import {
     my ( $class, @args ) = @_;
     my $caller = caller;
-    for my $x (@EXPORT) {
-        no strict 'refs';
-        *{ $caller . "::$x" } = *{$x};
+    for my $sub (qw/test run_me/) {
+        Sub::Install::install_sub( { into => $caller, code => $sub } );
     }
     strictures->import; # do this for Moo, since we load Moo in eval
     eval qq{

@@ -6,14 +6,13 @@ package Test::Roo::Role;
 # VERSION
 
 use Test::Roo (); # no imports!
+use Sub::Install;
 
 sub import {
     my ( $class, @args ) = @_;
     my $caller = caller;
-    {
-        no strict 'refs';
-        *{ $caller . "::test" } = *Test::Roo::test;
-    }
+    Sub::Install::install_sub(
+        { into => $caller, code => 'test', from => 'Test::Roo' } );
     strictures->import; # do this for Moo, since we load Moo in eval
     eval qq{
         package $caller;
