@@ -47,9 +47,9 @@
          "requires" : {
             "Moo" : "1.000008",
             "MooX::Types::MooseLike::Base" : "0",
+            "Sub::Install" : "0",
             "Test::More" : "0.96",
             "perl" : "5.008001",
-            "strict" : "0",
             "strictures" : "0"
          }
       },
@@ -61,6 +61,7 @@
             "File::Spec::Functions" : "0",
             "File::Temp" : "0",
             "List::Util" : "0",
+            "strict" : "0",
             "warnings" : "0"
          }
       }
