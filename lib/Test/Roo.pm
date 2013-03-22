@@ -2,7 +2,7 @@ use 5.008001;
 use strictures;
 
 package Test::Roo;
-# ABSTRACT: Composable tests with roles and Moo
+# ABSTRACT: Composable, reusable tests with roles and Moo
 # VERSION
 
 use Sub::Install;
@@ -47,30 +47,14 @@ sub run_me {
 
 =head1 SYNOPSIS
 
-A test file:
+Define test behaviors and required fixtures in a role:
 
-    # t/test.t
-    use Test::Roo; # loads Moo and Test::More
+    # t/lib/ObjectCreation.pm
 
-    use lib 't/lib';
+    package ObjectCreation;
+    use Test::Roo::Role;    # loads Moo::Role and Test::More
 
-    has class => (
-        is      => 'ro',
-        default => sub { "Digest::MD5" },
-    );
-
-    with 'MyTestRole';
-
-    run_me;
-    done_testing;
-
-A testing role:
-
-    # t/lib/MyTestRole.pm
-    package MyTestRole;
-    use Test::Roo::Role; # loads Moo::Role and Test::More
-
-    requires 'class';
+    requires 'class';       # we need this fixture
 
     test 'object creation' => sub {
         my $self = shift;
@@ -79,6 +63,55 @@ A testing role:
     };
 
     1;
+
+Provide fixtures and run tests from the .t file:
+
+    # t/test.t
+
+    use Test::Roo; # loads Moo and Test::More
+    use lib 't/lib';
+
+    # provide the fixture
+    has class => (
+        is      => 'ro',
+        default => sub { "Digest::MD5" },
+    );
+
+    # specify behaviors to test 
+    with 'ObjectCreation';
+
+    # give our subtests a pretty label
+    sub _build_description { "Testing " . shift->class }
+
+    # run the test with default fixture
+    run_me;
+
+    # run the test with different fixture
+    run_me( { class => "Digest::SHA1" } );
+
+    done_testing;
+
+Result:
+
+    $ prove -lv t
+    t/test.t .. 
+            ok 1 - require Digest::MD5;
+            ok 2 - The object isa Digest::MD5
+            1..2
+        ok 1 - object creation
+        1..1
+    ok 1 - Testing Digest::MD5
+            ok 1 - require Digest::SHA1;
+            ok 2 - The object isa Digest::SHA1
+            1..2
+        ok 1 - object creation
+        1..1
+    ok 2 - Testing Digest::SHA1
+    1..2
+    ok
+    All tests successful.
+    Files=1, Tests=2,  0 wallclock secs ( 0.02 usr  0.01 sys +  0.06 cusr  0.00 csys =  0.09 CPU)
+    Result: PASS
 
 =head1 DESCRIPTION
 

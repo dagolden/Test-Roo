@@ -1,7 +1,7 @@
-package MyTestRole;
-use Test::Roo::Role;
+package ObjectCreation;
+use Test::Roo::Role;    # loads Moo::Role and Test::More
 
-requires 'class';
+requires 'class';       # we need this fixture
 
 test 'object creation' => sub {
     my $self = shift;
