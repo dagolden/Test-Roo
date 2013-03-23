@@ -1,10 +1,10 @@
 {
-   "abstract" : "Composable tests with roles and Moo",
+   "abstract" : "Composable, reusable tests with roles and Moo",
    "author" : [
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300030, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300031, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "apache_2_0"
    ],
@@ -69,19 +69,19 @@
    "provides" : {
       "Test::Roo" : {
          "file" : "lib/Test/Roo.pm",
-         "version" : "1.000"
+         "version" : "1.001"
       },
       "Test::Roo::Class" : {
          "file" : "lib/Test/Roo/Class.pm",
-         "version" : "1.000"
+         "version" : "1.001"
       },
       "Test::Roo::Cookbook" : {
          "file" : "lib/Test/Roo/Cookbook.pm",
-         "version" : "1.000"
+         "version" : "1.001"
       },
       "Test::Roo::Role" : {
          "file" : "lib/Test/Roo/Role.pm",
-         "version" : "1.000"
+         "version" : "1.001"
       }
    },
    "release_status" : "stable",
@@ -96,6 +96,6 @@
          "web" : "https://github.com/dagolden/test-roo"
       }
    },
-   "version" : "1.000"
+   "version" : "1.001"
 }
 
