@@ -115,7 +115,7 @@ will globally affect every test block, including composed ones.
 
 sub each_test {
     my ( $self, $name, $code ) = @_;
-    subtest $name => sub { $code->($self) };
+    $code->($self);
 }
 
 =method teardown
