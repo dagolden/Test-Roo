@@ -2,6 +2,12 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+    [CHANGED]
+
+    - modifiers on 'each_test' are now included in the subtest block so
+      that any tests run in the modifiers are listed with other tests in
+      the block
+
     [DOCUMENTED]
 
     - Enhanced SYNOPSIS
