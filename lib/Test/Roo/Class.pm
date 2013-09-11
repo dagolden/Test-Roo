@@ -114,7 +114,7 @@ will globally affect every test block, including composed ones.
 =cut
 
 sub each_test {
-    my ( $self, $name, $code ) = @_;
+    my ( $self, $code ) = @_;
     $code->($self);
 }
 

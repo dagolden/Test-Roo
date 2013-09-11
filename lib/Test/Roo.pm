@@ -32,8 +32,11 @@ sub import {
 
 sub test {
     my ( $name, $code ) = @_;
-    my $caller = caller;
-    my $subtest = sub { my $self = shift; subtest $name => sub { $self->each_test( $name, $code ) } };
+    my $caller  = caller;
+    my $subtest = sub {
+        my $self = shift;
+        subtest $name => sub { $self->each_test($code) }
+    };
     eval qq{ package $caller; after _do_tests => \$subtest };
     die $@ if $@;
 }
