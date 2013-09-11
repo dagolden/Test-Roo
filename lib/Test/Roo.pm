@@ -5,6 +5,8 @@ package Test::Roo;
 # ABSTRACT: Composable, reusable tests with roles and Moo
 # VERSION
 
+use Test::More 0.96 import => [qw/subtest/];
+
 use Sub::Install;
 
 sub import {
@@ -31,7 +33,7 @@ sub import {
 sub test {
     my ( $name, $code ) = @_;
     my $caller = caller;
-    my $subtest = sub { shift->each_test( $name, $code ) };
+    my $subtest = sub { my $self = shift; subtest $name => sub { $self->each_test( $name, $code ) } };
     eval qq{ package $caller; after _do_tests => \$subtest };
     die $@ if $@;
 }
