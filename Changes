@@ -2,6 +2,8 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+1.001     2013-09-11 10:13:42 America/New_York
+
     [CHANGED]
 
     - modifiers on 'each_test' are now included in the subtest block so
