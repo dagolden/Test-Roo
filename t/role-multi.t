@@ -1,4 +1,5 @@
 use 5.008001;
+
 package MyTest;
 use Test::Roo;
 
@@ -15,7 +16,7 @@ package main;
 use strictures;
 use Test::More;
 
-for my $c ( qw/Digest::MD5 Math::BigInt/ ) {
+for my $c (qw/Digest::MD5 Math::BigInt/) {
     MyTest->run_tests( $c, { class => $c } );
 }
 

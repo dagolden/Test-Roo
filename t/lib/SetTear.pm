@@ -2,13 +2,9 @@ package SetTear;
 use Test::Roo::Role;
 use File::Temp;
 
-has tempdir => (
-    is => 'rw',
-);
+has tempdir => ( is => 'rw', );
 
-has tempname => (
-    is => 'rw',
-);
+has tempname => ( is => 'rw', );
 
 before setup => sub {
     my $self = shift;

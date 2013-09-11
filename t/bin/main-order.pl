@@ -2,11 +2,11 @@ use 5.008001;
 use Test::Roo;
 
 test first_test => sub {
-    pass( "first" );
+    pass("first");
 };
 
 test second_test => sub {
-    pass( "second" );
+    pass("second");
 };
 
 run_me;

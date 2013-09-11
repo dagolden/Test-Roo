@@ -6,7 +6,7 @@ use lib 't/lib';
 with 'LastTest';
 
 test in_main => sub {
-    pass( "main" );
+    pass("main");
 };
 
 run_me;

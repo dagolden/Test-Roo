@@ -4,7 +4,7 @@ use Test::Roo;
 use lib 't/lib';
 
 test in_main => sub {
-    pass( "main" );
+    pass("main");
 };
 
 with 'LastTest';

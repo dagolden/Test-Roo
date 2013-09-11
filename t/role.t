@@ -4,7 +4,7 @@ use Test::Roo;
 use lib 't/lib';
 
 has fixture => (
-    is => 'ro',
+    is      => 'ro',
     default => sub { "hello world" },
 );
 

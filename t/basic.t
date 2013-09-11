@@ -2,7 +2,7 @@ use 5.008001;
 use Test::Roo;
 
 has fixture => (
-    is => 'ro',
+    is      => 'ro',
     default => sub { "hello world" },
 );
 

@@ -4,7 +4,7 @@ package MyTest;
 use Test::Roo;
 
 has fixture => (
-    is => 'ro',
+    is      => 'ro',
     default => sub { "hello world" },
 );
 

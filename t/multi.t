@@ -14,7 +14,7 @@ has regex => (
 );
 
 sub _build_description {
-    return shift->phrase
+    return shift->phrase;
 }
 
 test try_me => sub {
@@ -29,7 +29,7 @@ use Test::More;
 my @phrases = ( 'hello world', 'goodbye world', );
 
 for my $p (@phrases) {
-    MyTest->run_tests({phrase => $p});
+    MyTest->run_tests( { phrase => $p } );
 }
 
 done_testing;

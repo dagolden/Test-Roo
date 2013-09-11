@@ -18,7 +18,7 @@ use Test::More 0.96 import => [qw/subtest/];
 A description for a subtest block wrapping all tests by the object.  It is a
 'lazy' attribute.  Test classes may implement their own C<_build_description>
 method to create a description from object attributes.  Otherwise, the default
-is "testing with CLASS". 
+is "testing with CLASS".
 
 =cut
 
@@ -118,7 +118,7 @@ sub each_test {
     subtest $name => sub { $code->($self) };
 }
 
-=method teardown 
+=method teardown
 
 This is an empty method used to anchor method modifiers.  It should not
 be overridden by subclasses.
