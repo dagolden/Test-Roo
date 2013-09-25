@@ -11,6 +11,7 @@ recommends "multidimensional" => "0";
 on 'test' => sub {
   requires "Capture::Tiny" => "0";
   requires "ExtUtils::MakeMaker" => "0";
+  requires "File::Spec" => "0";
   requires "File::Spec::Functions" => "0";
   requires "File::Temp" => "0";
   requires "IO::Handle" => "0";
@@ -23,7 +24,7 @@ on 'test' => sub {
 };
 
 on 'configure' => sub {
-  requires "ExtUtils::MakeMaker" => "6.30";
+  requires "ExtUtils::MakeMaker" => "6.17";
 };
 
 on 'develop' => sub {

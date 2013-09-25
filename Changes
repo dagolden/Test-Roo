@@ -2,6 +2,14 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+    [FIXES]
+
+    - Compile test could hang on Windows
+
+    [PREREQS]
+
+    - Dropped configure_requires for ExtUtils::MakeMaker to 6.17
+
 1.001     2013-09-11 10:13:42 America/New_York
 
     [CHANGED]
