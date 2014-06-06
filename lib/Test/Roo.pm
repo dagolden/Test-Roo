@@ -12,7 +12,7 @@ use Sub::Install;
 sub import {
     my ( $class, @args ) = @_;
     my $caller = caller;
-    for my $sub (qw/test run_me/) {
+    for my $sub (qw/test top_test run_me/) {
         Sub::Install::install_sub( { into => $caller, code => $sub } );
     }
     strictures->import; # do this for Moo, since we load Moo in eval
@@ -38,6 +38,14 @@ sub test {
         subtest $name => sub { $self->each_test($code) }
     };
     eval qq{ package $caller; after _do_tests => \$subtest };
+    die $@ if $@;
+}
+
+sub top_test {
+    my ( $name, $code ) = @_;
+    my $caller  = caller;
+    my $test = sub { shift->each_test($code) };
+    eval qq{ package $caller; after _do_tests => \$test };
     die $@ if $@;
 }
 
@@ -284,6 +292,54 @@ the test object as its only argument.
 
 Tests are run in the order declared, so the order of tests from roles will
 depend on when they are composed relative to other test declarations.
+
+=head2 top_test
+
+    top_test $label => sub { ... };
+
+The C<top_test> function adds a "top level" test.  Works exactly like L</test>
+except it will not start a subtest.  This is especially useful in very simple
+testing situations where the extra subtest level is just noise.
+
+So for example the following test
+
+    # t/test.t
+    use Test::Roo;
+
+    has class => (
+        is       => 'ro',
+        required => 1,
+    );
+
+    top_test basic => sub {
+        my $self = shift;
+
+        require_ok($self->class);
+        isa_ok($self->class->new, $self->class);
+    };
+
+    for my $c ( qw/Digest::MD5 Digest::SHA/ ) {
+        run_me("Testing $c", { class => $c } );
+    }
+
+    done_testing;
+
+produces the following TAP
+
+    t/test.t .. 
+        ok 1 - require Digest::MD5;
+        ok 2 - The object isa Digest::MD5
+        1..2
+    ok 1 - Testing Digest::MD5
+        ok 1 - require Digest::SHA1;
+        ok 2 - The object isa Digest::SHA1
+        1..2
+    ok 2 - Testing Digest::SHA1
+    1..2
+    ok
+    All tests successful.
+    Files=1, Tests=2,  0 wallclock secs ( 0.02 usr  0.01 sys +  0.06 cusr  0.00 csys =  0.09 CPU)
+    Result: PASS
 
 =head2 run_me
 

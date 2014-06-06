@@ -2,6 +2,11 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+    [ADDED]
+
+    - Test::Roo now additionally exports 'top_test' for
+      more simple testing (Arthur Axel fREW Schmidt)
+
 1.002     2013-09-25 14:03:55 America/New_York
 
     [FIXES]
