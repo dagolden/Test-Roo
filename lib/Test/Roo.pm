@@ -43,7 +43,7 @@ sub test {
 
 sub top_test {
     my ( $name, $code ) = @_;
-    my $caller  = caller;
+    my $caller = caller;
     my $test = sub { shift->each_test($code) };
     eval qq{ package $caller; after _do_tests => \$test };
     die $@ if $@;
@@ -90,7 +90,7 @@ Provide fixtures and run tests from the .t file:
         default => sub { "Digest::MD5" },
     );
 
-    # specify behaviors to test 
+    # specify behaviors to test
     with 'ObjectCreation';
 
     # give our subtests a pretty label
@@ -107,7 +107,7 @@ Provide fixtures and run tests from the .t file:
 Result:
 
     $ prove -lv t
-    t/test.t .. 
+    t/test.t ..
             ok 1 - require Digest::MD5;
             ok 2 - The object isa Digest::MD5
             1..2
@@ -326,7 +326,7 @@ So for example the following test
 
 produces the following TAP
 
-    t/test.t .. 
+    t/test.t ..
         ok 1 - require Digest::MD5;
         ok 2 - The object isa Digest::MD5
         1..2
