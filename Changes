@@ -2,6 +2,8 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+1.003     2014-06-27 23:04:39-04:00 America/New_York
+
     [ADDED]
 
     - Test::Roo now additionally exports 'top_test' for
