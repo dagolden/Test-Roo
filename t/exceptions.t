@@ -1,6 +1,6 @@
 use 5.008001;
 use Test::More 0.96;
-use Capture::Tiny qw/capture/;
+use Capture::Tiny 0.12 qw/capture/;
 
 use lib 't/lib';
 
