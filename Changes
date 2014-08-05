@@ -2,6 +2,8 @@ Revision history for Test-Roo
 
 {{$NEXT}}
 
+1.004     2014-08-05 16:38:43-04:00 America/New_York
+
     [FIXED]
 
     - Requires Capture::Tiny 0.12 or later to avoid test failures
