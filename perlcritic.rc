@@ -7,6 +7,9 @@ allow = $@ $!
 [TestingAndDebugging::ProhibitNoStrict]
 allow = refs
 
+[Variables::ProhibitEvilVariables]
+variables = $DB::single
+
 # Turn these off
 [-BuiltinFunctions::ProhibitStringyEval]
 [-ControlStructures::ProhibitPostfixControls]
@@ -18,10 +21,8 @@ allow = refs
 [-InputOutput::ProhibitTwoArgOpen]
 [-Modules::ProhibitEvilModules]
 
-# Turn this on
-[-Lax::ProhibitStringyEval::ExceptForRequire]
-
 # Customize
+[-Lax::ProhibitStringyEval::ExceptForRequire]
 [Lax::RequireExplicitPackage::ExceptForPragmata]
 allowed_pragmata = diagnostics feature perlversion strict warnings strictures
 
